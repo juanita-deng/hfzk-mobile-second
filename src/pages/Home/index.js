@@ -20,8 +20,7 @@ const Tabs = [
 
 class Home extends React.Component {
 	constructor(props) {
-		console.log(props);
-
+		// console.log(props);
 		super(props);
 		this.state = {
 			//用于控制默认选中的tab栏
@@ -29,6 +28,16 @@ class Home extends React.Component {
 			//用于控制tabBar是否需要全屏
 			fullScreen: true,
 		};
+	}
+	componentDidUpdate(prevProps) {
+		// console.log(prevProps);
+		// console.log(this.props);
+		//解决导航点击跳转到新的组件时,底部高亮不对对应的问题
+		if (prevProps.location.pathname !== this.props.location.pathname) {
+			this.setState({
+				selectedTab: this.props.location.pathname,
+			});
+		}
 	}
 	render() {
 		return (
@@ -44,7 +53,7 @@ class Home extends React.Component {
 				<div
 					style={
 						this.state.fullScreen
-							? { position: 'fixed', height: '100%', width: '100%', top: 0 }
+							? { position: 'fixed', height: '50px', width: '100%', bottom: 0 }
 							: { height: 400 }
 					}
 				>
@@ -64,9 +73,9 @@ class Home extends React.Component {
 								selectedIcon={<span className={`iconfont ${v.icon}`}></span>}
 								selected={this.state.selectedTab === v.path}
 								onPress={() => {
-									this.setState({
-										selectedTab: v.path,
-									});
+									// this.setState({
+									// 	selectedTab: v.path,
+									// });//上面已经统一处理
 									this.props.history.push(v.path);
 								}}
 								data-seed="logId"

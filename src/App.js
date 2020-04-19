@@ -15,7 +15,7 @@ class App extends React.Component {
 	render() {
 		return (
 			<Router>
-				<div>
+				<div className="app">
 					<Switch>
 						{/* 路由重定向 */}
 						<Redirect from="/" to="/home" exact></Redirect>

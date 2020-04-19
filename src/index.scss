@@ -5,10 +5,14 @@ $color: #fff;
 	padding: 0;
 	list-style: none;
 	box-sizing: border-box;
+	//谷歌移动端touch事件报错问题
+	touch-action: pan-y;
 }
 
 html,
-body {
+body,
+#root,
+.app {
 	height: 100%;
 }
 
