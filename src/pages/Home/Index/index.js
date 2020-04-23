@@ -2,7 +2,9 @@ import React from 'react';
 import axios from 'axios';
 import { Carousel, Flex, Grid } from 'antd-mobile';
 import './index.scss';
-import { getCurrentCity } from '../../../utils/city'; //导入封装的工具函数
+import { getCurrentCity } from 'utils/city'; //导入封装的工具函数
+import BASE_URL from 'utils/config'; //导入环境变量
+
 //导入图片变量
 import nav1 from './images/nav-1.png';
 import nav2 from './images/nav-2.png';
@@ -159,7 +161,7 @@ class Index extends React.Component {
 						}}
 					>
 						<img
-							src={`http://localhost:8080${val.imgSrc}`}
+							src={BASE_URL + val.imgSrc}
 							alt={val.alt}
 							style={{ width: '100%', verticalAlign: 'top' }}
 							onLoad={() => {
@@ -240,7 +242,7 @@ class Index extends React.Component {
 										<p className="title">{el.title}</p>
 										<span className="info">{el.desc}</span>
 									</div>
-									<img src={'http://localhost:8080' + el.imgSrc} alt="" />
+									<img src={BASE_URL + el.imgSrc} alt="" />
 								</Flex>
 							)}
 						/>
@@ -257,11 +259,7 @@ class Index extends React.Component {
 				{this.state.newList.map((v) => (
 					<div className="news-item" key={v.id}>
 						<div className="imgwrap">
-							<img
-								className="img"
-								src={'http://localhost:8080' + v.imgSrc}
-								alt=""
-							/>
+							<img className="img" src={BASE_URL + v.imgSrc} alt="" />
 						</div>
 						<Flex className="content" direction="column" justify="between">
 							<h3 className="title">{v.title}</h3>
