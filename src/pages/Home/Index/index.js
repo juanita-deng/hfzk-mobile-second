@@ -1,6 +1,8 @@
 import React from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import http from 'utils/http'; //导入优化过的axios
 import { Carousel, Flex, Grid } from 'antd-mobile';
+import SearchHeader from 'common/SearchHeader';
 import './index.scss';
 import { getCurrentCity } from 'utils/city'; //导入封装的工具函数
 import BASE_URL from 'utils/config'; //导入环境变量
@@ -40,7 +42,7 @@ class Index extends React.Component {
 				{/* 轮播图 */}
 				<div className="swiper">
 					{this.renderCarsousel()}
-					{this.renderSearch()}
+					<SearchHeader cityName={this.state.city.label}></SearchHeader>
 				</div>
 				{/* 导航 */}
 				<div className="nav">{this.renderNav()}</div>
@@ -98,9 +100,9 @@ class Index extends React.Component {
 	}
 	//发送请求获取轮播图相应数据
 	async getSwiper() {
-		const res = await axios.get('http://localhost:8080/home/swiper');
+		const res = await http.get('/home/swiper');
 		// console.log(res);
-		const { status, body } = res.data;
+		const { status, body } = res;
 		if (status === 200) {
 			this.setState({
 				data: body,
@@ -110,7 +112,7 @@ class Index extends React.Component {
 	}
 	//发送请求获取住房小组信息
 	async getGroup() {
-		const res = await axios.get('http://localhost:8080/home/groups', {
+		const res = await http.get('/home/groups', {
 			// params: {
 			// 	area: 'AREA|88cff55c-aaa4-e2e0',
 			// },
@@ -119,7 +121,7 @@ class Index extends React.Component {
 			},
 		});
 		// console.log(res);
-		const { status, body } = res.data;
+		const { status, body } = res;
 		if (status === 200) {
 			this.setState({
 				groupList: body,
@@ -129,13 +131,13 @@ class Index extends React.Component {
 	}
 	//发送请求获取最新资讯
 	async getNews() {
-		const res = await axios.get('http://localhost:8080/home/news', {
+		const res = await http.get('/home/news', {
 			params: {
 				area: this.state.city.value,
 			},
 		});
 		// console.log(res);
-		const { status, body } = res.data;
+		const { status, body } = res;
 		if (status === 200) {
 			this.setState({
 				newList: body,
@@ -175,31 +177,7 @@ class Index extends React.Component {
 			</Carousel>
 		);
 	}
-	//渲染搜索
-	renderSearch() {
-		return (
-			<Flex className="search-box">
-				<Flex className="search-form">
-					<div
-						className="location"
-						onClick={() => this.props.history.push('/city')}
-					>
-						<span className="name">{this.state.city.label}</span>
-						<i className="iconfont icon-arrow"> </i>
-					</div>
-					<div className="search-input">
-						<i className="iconfont icon-seach" />
-						<span className="text">请输入小区地址</span>
-					</div>
-				</Flex>
-				{/* 地图小图标 */}
-				<i
-					className="iconfont icon-map"
-					onClick={() => this.props.history.push('/map')}
-				/>
-			</Flex>
-		);
-	}
+
 	//渲染导航
 	renderNav() {
 		return (

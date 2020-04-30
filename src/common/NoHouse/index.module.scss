@@ -1,0 +1,13 @@
+.sticky {
+	text-align: center;
+	margin: 100px auto;
+	:global {
+		img {
+			width: 120px;
+			margin-bottom: 20px;
+		}
+		p {
+			color: #666;
+		}
+	}
+}

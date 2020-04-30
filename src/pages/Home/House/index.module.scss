@@ -1,0 +1,35 @@
+.house {
+	padding-bottom: 45px;
+	height: 100%;
+	:global {
+		.house-title {
+			background-color: #ddd;
+			padding-left: 5px;
+			.house-header {
+				width: 100%;
+				.search-box {
+					position: static;
+					top: 0;
+					height: 45px;
+					padding-left: 0;
+					.icon-map {
+						color: #00ae66;
+					}
+				}
+			}
+			.icon-back {
+				font-size: 14px;
+			}
+		}
+		//占位元素
+		.placeholder {
+			padding-top: 10px;
+			p {
+				height: 100%;
+				background-color: #dddddd;
+				text-indent: 10px;
+				padding-top: 10px;
+			}
+		}
+	}
+}

@@ -14,7 +14,8 @@
          5.Home/index.js中修改类似逻辑的代码
           直接调用即可
 */
-import axios from 'axios';
+// import axios from 'axios';
+import http from './http';
 
 //将本地存储当前城市统一变量暴露出去
 const CURRENT_CITY = 'currentCity';
@@ -32,10 +33,10 @@ export function getCurrentCity(callback) {
 		} else {
 			const MyCity = new window.BMap.LocalCity();
 			MyCity.get((result) => {
-				axios
-					.get('http://localhost:8080/area/info?name=' + result.name)
+				http
+					.get('/area/info?name=' + result.name)
 					.then((res) => {
-						const { body } = res.data;
+						const { body } = res;
 						// localStorage.setItem('currentCity', JSON.stringify(body));
 						setCity(body);
 						resolve(body);
