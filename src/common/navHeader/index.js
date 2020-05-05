@@ -10,6 +10,7 @@ class NavHeader extends React.Component {
 		rightContent: PropTypes.array,
 	};
 	render() {
+		// console.log(this.props);
 		return (
 			<div className={classNames(styles['nav-header'], this.props.className)}>
 				<NavBar

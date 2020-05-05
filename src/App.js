@@ -11,6 +11,7 @@ import Map from './pages/Map';
 import City from './pages/City';
 import NotFound from './pages/NotFound';
 import Detail from './pages/Detail';
+import Login from './pages/Login';
 
 class App extends React.Component {
 	render() {
@@ -24,6 +25,7 @@ class App extends React.Component {
 						<Route path="/map" component={Map}></Route>
 						<Route path="/city" component={City}></Route>
 						<Route path="/detail/:id" component={Detail}></Route>
+						<Route path="/login" component={Login}></Route>
 						<Route component={NotFound}></Route>
 					</Switch>
 				</div>
