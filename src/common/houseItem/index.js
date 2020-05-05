@@ -1,10 +1,16 @@
 import React from 'react';
 import styles from './index.module.scss';
 import BASE_URL from 'utils/config'; //导入环境变量
+import { withRouter } from 'react-router-dom';
 
-export default function HouseItem({ v, style }) {
+function HouseItem(props) {
+	const { v, style, history } = props;
 	return (
-		<div className={styles.house} style={style}>
+		<div
+			className={styles.house}
+			style={style}
+			onClick={() => history.push('/detail/' + v.houseCode)}
+		>
 			<div className="imgWrap">
 				<img className="img" src={BASE_URL + v.houseImg} alt="" />
 			</div>
@@ -27,3 +33,4 @@ export default function HouseItem({ v, style }) {
 		</div>
 	);
 }
+export default withRouter(HouseItem);

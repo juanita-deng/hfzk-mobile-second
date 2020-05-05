@@ -5,6 +5,7 @@ import FilterPicker from '../FilterPicker';
 import FilterMore from '../FilterMore';
 import { getCurrentCity } from 'utils/city';
 import http from 'utils/http';
+import { Spring } from 'react-spring/renderprops';
 
 class Filter extends React.Component {
 	constructor(props) {
@@ -44,12 +45,10 @@ class Filter extends React.Component {
 		}
 	}
 	render() {
-		const { openType } = this.state;
 		return (
 			<div className={styles.filter}>
-				{openType === 'area' || openType === 'price' || openType === 'mode' ? (
-					<div className="mask" onClick={this.handleHide} />
-				) : null}
+				{this.renderMask()}
+
 				<div className="content">
 					{/* filter组件的内容 */}
 					{/* 筛选标题 */}
@@ -65,6 +64,29 @@ class Filter extends React.Component {
 			</div>
 		);
 	}
+	//渲染遮罩
+	renderMask() {
+		const { openType } = this.state;
+		const isShow =
+			openType === 'area' || openType === 'price' || openType === 'mode';
+		return (
+			<Spring
+				from={{ opacity: 0 }}
+				to={{ opacity: isShow ? 1 : 0 }}
+				config={{ duration: 2000 }}
+			>
+				{(props) => {
+					if (props.opacity === 0) {
+						return null;
+					} else {
+						return (
+							<div className="mask" style={props} onClick={this.handleHide} />
+						);
+					}
+				}}
+			</Spring>
+		);
+	}
 	//渲染更多FilterMore组件
 	renderFilterMore() {
 		const {
@@ -72,18 +94,19 @@ class Filter extends React.Component {
 			selectedValue,
 			filterData: { characteristic, floor, oriented, roomType },
 		} = this.state;
-		const defaultValue = selectedValue[openType];
-		if (openType === 'more') {
-			return (
-				<FilterMore
-					handleHide={this.handleHide}
-					{...{ characteristic, floor, oriented, roomType }}
-					handleConfirm={this.handleConfirm}
-					/* 数据回显 */
-					defaultValue={defaultValue}
-				></FilterMore>
-			);
-		}
+		const defaultValue = selectedValue.more;
+		// if (openType === 'more') {//显隐交给组件自己处理
+		return (
+			<FilterMore
+				handleHide={this.handleHide}
+				{...{ characteristic, floor, oriented, roomType }}
+				handleConfirm={this.handleConfirm}
+				/* 数据回显 */
+				defaultValue={defaultValue}
+				openType={openType}
+			></FilterMore>
+		);
+		// }
 	}
 	//渲染组件FilterPicker
 	renderFilterPicker() {
@@ -169,8 +192,8 @@ class Filter extends React.Component {
 	};
 	//点击确定按钮的逻辑
 	handleConfirm = (val) => {
-		window.scrollTo(0, 0);
 		document.body.style.overflow = '';
+		window.scrollTo(0, 0);
 
 		// console.log(val); //获取子组件传递过来的值
 		const { openType, selectedValue, titleSeleced } = this.state;

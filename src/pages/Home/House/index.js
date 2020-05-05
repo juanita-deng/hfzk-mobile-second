@@ -92,7 +92,7 @@ class House extends React.Component {
 	}
 	//用于提供加载更多函数的逻辑
 	loadMoreRows = ({ startIndex, stopIndex }) => {
-		// console.log(startIndex, stopIndex);
+		console.log('加载', startIndex, stopIndex);
 		return new Promise(async (resolve, reject) => {
 			//异步的操作,需要发送请求,获取数据
 			await this.getHouseList(startIndex + 1, stopIndex + 1);
@@ -123,6 +123,7 @@ class House extends React.Component {
 	//获取房屋数据
 	async getHouseList(start = 1, end = 30) {
 		Toast.loading('拼命加载中');
+		document.body.overflow = 'hidden';
 		const city = await getCurrentCity();
 		const res = await http.get('/houses', {
 			params: {
@@ -140,6 +141,7 @@ class House extends React.Component {
 			});
 		}
 		Toast.hide();
+		document.body.overflow = '';
 		if (start === 1) {
 			Toast.info(`总共加载了${count}条数据`);
 		}
