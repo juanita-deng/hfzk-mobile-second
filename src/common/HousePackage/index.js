@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styles from './index.module.scss';
+import classNames from 'classnames';
 
 // 所有房屋配置项
 const HOUSE_PACKAGE = [
@@ -56,13 +57,30 @@ const HOUSE_PACKAGE = [
 ];
 
 export default class HousePackage extends Component {
+	state = {
+		active: [],
+	};
 	render() {
-		const data = HOUSE_PACKAGE.filter((v) => this.props.list.includes(v.name));
+		// console.log(this.props);
+		const { list, onSelect } = this.props;
+		let data = [];
+		if (list) {
+			data = HOUSE_PACKAGE.filter((v) => this.props.list.includes(v.name));
+		} else {
+			data = HOUSE_PACKAGE;
+		}
+
 		// console.log(data);
 		return (
 			<ul className={styles['house-package']}>
 				{data.map((v) => (
-					<li className="item" key={v.id}>
+					<li
+						onClick={onSelect && this.handleClick.bind(this, v.name)}
+						className={classNames('item', {
+							active: this.state.active.includes(v.name),
+						})}
+						key={v.id}
+					>
 						<p>
 							<i className={`iconfont icon ${v.icon}`}></i>
 						</p>
@@ -72,4 +90,19 @@ export default class HousePackage extends Component {
 			</ul>
 		);
 	}
+	handleClick = (name) => {
+		// console.log(name);
+		const { active } = this.state;
+		let arr = Array.from(active);
+		if (arr.includes(name)) {
+			arr = arr.filter((v) => v !== name);
+		} else {
+			arr.push(name);
+		}
+		this.setState({
+			active: arr,
+		});
+		//将筛选好的最新结果传给父组件
+		this.props.onSelect(arr);
+	};
 }

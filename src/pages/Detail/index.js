@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import styles from './index.module.scss';
 import NavHeader from 'common/navHeader';
 import http from 'utils/http';
-import { Carousel, Flex } from 'antd-mobile';
+import { Carousel, Flex, Toast, Modal } from 'antd-mobile';
 import BASE_URL from 'utils/config';
 import HousePackage from 'common/HousePackage';
 import HouseItem from 'common/houseItem';
+import { hasToken } from 'utils/token';
 
 const BMap = window.BMap;
 // 猜你喜欢
@@ -38,6 +39,7 @@ const recommendHouses = [
 export default class Detail extends Component {
 	state = {
 		info: '', //房源信息
+		isFavorite: false, //是否收藏
 	};
 	render() {
 		if (!this.state.info) {
@@ -56,6 +58,7 @@ export default class Detail extends Component {
 			supporting,
 			description,
 		} = this.state.info;
+		const { isFavorite } = this.state;
 		return (
 			<div className={styles.detail}>
 				{/* 导航栏组件 */}
@@ -180,11 +183,15 @@ export default class Detail extends Component {
 				<Flex className="fixedBottom">
 					<Flex.Item onClick={this.handleFavorite}>
 						<img
-							src={BASE_URL + '/img/star.png'}
+							src={
+								isFavorite
+									? BASE_URL + '/img/star.png'
+									: BASE_URL + '/img/unstar.png'
+							}
 							className="favoriteImg"
 							alt="收藏"
 						/>
-						<span className="favorite">已收藏</span>
+						<span className="favorite">{isFavorite ? '已收藏' : '收藏'}</span>
 					</Flex.Item>
 					<Flex.Item>在线咨询</Flex.Item>
 					<Flex.Item>
@@ -198,13 +205,23 @@ export default class Detail extends Component {
 	}
 	async componentDidMount() {
 		const id = this.props.match.params.id;
+		//判断是否登陆
+		if (hasToken()) {
+			//发送请求查看收藏状态
+			const { status, body } = await http.get('/user/favorites/' + id);
+			if (status === 200) {
+				this.setState({
+					isFavorite: body.isFavorite,
+				});
+			}
+		}
 		const { status, body } = await http.get(`houses/${id}`);
 		if (status === 200) {
 			this.setState({
 				info: body,
 			});
 		}
-		console.log(this.state.info);
+		// console.log(this.state.info);
 		const { community, coord } = body;
 		this.renderMap(community, coord);
 	}
@@ -254,7 +271,37 @@ export default class Detail extends Component {
 		map.addOverlay(label);
 	}
 	//底部收藏
-	handleFavorite() {
-		console.log('喜欢');
-	}
+	handleFavorite = async () => {
+		const { isFavorite } = this.state;
+		const id = this.props.match.params.id;
+		//已登录逻辑
+		if (hasToken()) {
+			//收藏了
+			if (isFavorite) {
+				await http.delete('/user/favorites/' + id);
+				this.setState({
+					isFavorite: false,
+				});
+				Toast.success('取消收藏成功');
+			} else {
+				//没收藏
+				await http.post('/user/favorites/' + id);
+				this.setState({
+					isFavorite: true,
+				});
+				Toast.success('收藏成功');
+			}
+		} else {
+			//没登陆
+			Modal.alert('温馨提示', '登陆才能收藏,是否要去登陆?', [
+				{ text: '取消' },
+				{
+					text: '确定',
+					onPress: () => {
+						console.log(12);
+					},
+				},
+			]);
+		}
+	};
 }

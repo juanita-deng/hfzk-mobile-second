@@ -17,14 +17,14 @@ export function setToken(token) {
  * 从localstorage中获取token
  * @return 返回的token
  */
-export function getToken(token) {
-	localStorage.getItem(TOKEN_NAME);
+export function getToken() {
+	return localStorage.getItem(TOKEN_NAME);
 }
 /**
  * 移除token
  */
 
-export function removeToken(token) {
+export function removeToken() {
 	localStorage.removeItem(TOKEN_NAME);
 }
 /**
@@ -32,6 +32,6 @@ export function removeToken(token) {
  * @return {boolean}
  */
 
-export function hasToken(token) {
+export function hasToken() {
 	return !!getToken();
 }
